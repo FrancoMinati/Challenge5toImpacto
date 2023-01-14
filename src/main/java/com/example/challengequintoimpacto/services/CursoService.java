@@ -3,84 +3,83 @@ package com.example.challengequintoimpacto.services;
 import com.example.challengequintoimpacto.entities.Alumno;
 import com.example.challengequintoimpacto.entities.Curso;
 import com.example.challengequintoimpacto.entities.Profesor;
-import com.example.challengequintoimpacto.repositories.AlumnoRepository;
+import com.example.challengequintoimpacto.enums.Turno;
+import com.example.challengequintoimpacto.exceptions.CursoException;
 import com.example.challengequintoimpacto.repositories.CursoRepository;
-import com.example.challengequintoimpacto.repositories.ProfesorRepository;
 import jakarta.transaction.Transactional;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class CursoService implements BaseService<Curso>{
     @Autowired
     CursoRepository cursoRepository;
     @Override
     @Transactional
-    public List<Curso> getAll() throws Exception {
+    public List<Curso> getAll() throws CursoException {
         try{
-            List<Curso> cursos=this.cursoRepository.findAll();
-            return cursos;
+            return this.cursoRepository.findAll();
         }catch (Exception ex){
-            throw new Exception(ex.getMessage());
+            throw new CursoException(ex.getMessage());
         }
     }
-
     @Override
     @Transactional
-    public Curso getOne(Long id) throws Exception {
-        try{
-            Optional<Curso> opt=this.cursoRepository.findById(id);
-            Curso curso=opt.get();
-            return curso;
-        }catch (Exception ex){
-            throw new Exception(ex.getMessage());
-        }
-    }
-
-    @Override
-    @Transactional
-    public Curso saveOne(Curso entity) throws Exception {
-        try{
-            Curso curso=this.cursoRepository.save(entity);
-            return curso;
-        }catch (Exception ex){
-            throw new Exception(ex.getMessage());
-        }
-    }
-
-    @Override
-    @Transactional
-    public Curso updateOne(Curso entity, Long id) throws Exception {
+    public Curso getOne(Long id) throws CursoException {
         try{
             Optional<Curso> opt=this.cursoRepository.findById(id);
             if(opt.isPresent()){
-                Curso curso=this.cursoRepository.save(entity);
-                return curso;
+                return opt.get();
             }else{
-                throw new Exception("No existe un curso con el id: "+id);
+                throw new CursoException("No existe un curso con ese id: "+id);
             }
         }catch (Exception ex){
-            throw new Exception(ex.getMessage());
+            throw new CursoException(ex.getMessage());
+        }
+    }
+    @Override
+    @Transactional
+    public Curso saveOne(Curso entity) throws CursoException {
+        try{
+            return this.cursoRepository.save(entity);
+        }catch (Exception ex){
+            throw new CursoException(ex.getMessage());
+        }
+    }
+    @Override
+    @Transactional
+    public Curso updateOne(Curso entity, Long id) throws CursoException {
+        try{
+            Optional<Curso> opt=this.cursoRepository.findById(id);
+            if(opt.isPresent()){
+                return this.cursoRepository.save(entity);
+            }else{
+                throw new CursoException("No existe un curso con el id: "+id);
+            }
+        }catch (Exception ex){
+            throw new CursoException(ex.getMessage());
         }
     }
 
     @Override
     @Transactional
-    public Boolean deleteOneSoft(Long id) throws Exception {
+    public Boolean deleteOne(Long id) throws CursoException {
         try {
             Optional<Curso> opt=this.cursoRepository.findById(id);
             if(opt.isPresent()){
                 this.cursoRepository.deleteById(id);
                 return true;
             }else{
-                throw new Exception("No existe un curso con el id: "+id);
+                throw new CursoException("No existe un curso con el id: "+id);
             }
         }catch (Exception ex){
-            throw new Exception(ex.getMessage());
+            throw new CursoException(ex.getMessage());
         }
     }
-    @Transactional
 
     // Hay varias formas de interpretar esto
     /*
@@ -93,8 +92,48 @@ public class CursoService implements BaseService<Curso>{
        eligiera, pero creo que no es lo que se buscaba con la consigna
 
      */
-
-    public Curso removerProfesor(Long idProf, Long idCurso) throws Exception{
+    @Transactional
+    public void crearCurso(String nombre, Turno turno, String horario,Profesor profesor,List<Alumno> alumnos) throws CursoException{
+        try{
+            Curso curso=new Curso();
+            validarInformacion(nombre,horario);
+            curso.setNombre(nombre);
+            curso.setProfesor(profesor);
+            curso.setTurno(turno);
+            curso.setHorario(horario);
+            curso.setAlumnos(alumnos);
+            this.cursoRepository.save(curso);
+        }catch (Exception ex){
+            throw new CursoException(ex.getMessage());
+        }
+    }
+    @Transactional
+    public void updateCurso(String nombre, Turno turno, String horario,Profesor profesor,Long id,List<Alumno> alumnos) throws CursoException{
+        try{
+            Curso curso=getOne(id);
+            validarInformacion(nombre,horario);
+            curso.setNombre(nombre);
+            curso.setProfesor(profesor);
+            curso.setTurno(turno);
+            curso.setHorario(horario);
+            curso.setAlumnos(alumnos);
+            this.cursoRepository.save(curso);
+        }catch (Exception ex){
+            throw new CursoException(ex.getMessage());
+        }
+       
+    }
+    @Transactional
+    public void validarInformacion(String nombre, String horario) throws CursoException{
+        if(Strings.isBlank(nombre)){
+            throw new CursoException("El Nombre no puede estar vacio");
+        }
+        if(Strings.isBlank(horario)){
+            throw new CursoException("El Horario no puede estar vacio");
+        }
+    }
+    @Transactional
+    public Curso removerProfesor(Long idProf, Long idCurso) throws CursoException{
         try{
             Curso curso=getOne(idCurso);
             Long id=curso.getProfesor().getId();
@@ -103,12 +142,26 @@ public class CursoService implements BaseService<Curso>{
                 curso=updateOne(curso,idCurso);
                 return curso;
             }else{
-                throw new Exception("No existe un profesor con el id: "+id);
+                throw new CursoException("No existe un profesor con el id: "+id);
             }
         }catch (Exception ex){
-            throw new Exception(ex.getMessage());
+            throw new CursoException(ex.getMessage());
         }
     }
+    @Transactional
+    public List<Alumno> filtrarAlumnosNoCursantes(Long id,List<Alumno> alumnos) throws CursoException{
+        try{
+            Curso curso=getOne(id);
+            if(curso.getAlumnos().isEmpty()){
+                return alumnos;
+            }
+            List<Alumno> alumnosQueNoCursanLaMateria=alumnos;
+            alumnosQueNoCursanLaMateria.removeAll(curso.getAlumnos());
 
+            return alumnosQueNoCursanLaMateria;
+        }catch (Exception ex){
+            throw new CursoException(ex.getMessage());
+        }
+    }
 
 }

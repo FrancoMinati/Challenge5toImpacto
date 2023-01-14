@@ -1,11 +1,13 @@
 package com.example.challengequintoimpacto.services;
 
+import com.example.challengequintoimpacto.exceptions.BaseException;
+
 import java.util.List;
 
 public interface BaseService<E> {
-    List<E> getAll() throws Exception;
-    E getOne(Long id) throws Exception;
-    E saveOne(E entity) throws Exception;
-    E updateOne(E entity,Long id) throws Exception;
-    Boolean deleteOneSoft(Long id) throws Exception;
+    List<E> getAll() throws BaseException;
+    E getOne(Long id) throws BaseException;
+    E saveOne(E entity) throws BaseException;
+    E updateOne(E entity,Long id) throws BaseException;
+    Boolean deleteOne(Long id) throws BaseException;
 }

@@ -6,12 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 @Table(name = "cursos")
 public class Curso {
@@ -19,11 +18,21 @@ public class Curso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    @OneToOne
+
+    @ManyToOne()
+    @JoinColumn(name = "fk_profesor")
     private Profesor profesor;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "turno",nullable = false)
     private Turno turno;
-    private Date horario;
-    @ManyToMany()
-    private ArrayList<Alumno> alumnos;
+    private String horario;
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name="curso_permiso",
+            joinColumns=@JoinColumn(name="fk_curso"),
+            inverseJoinColumns=@JoinColumn(name="fk_alumno")
+    )
+    private List<Alumno> alumnos;
 
 }

@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,9 +22,17 @@ public class Alumno {
 
 
     private String nombre;
-    private Date fecha_nacimiento;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+
+    private Date fechaNacimiento;
     private int edad;
     private String historia;
-    @ManyToMany()
-    private ArrayList<Curso> cursos;
+
+    @ManyToMany(cascade ={CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name="curso_permiso",
+            joinColumns=@JoinColumn(name="fk_alumno"),
+            inverseJoinColumns=@JoinColumn(name="fk_curso")
+    )
+    private List<Curso> cursos;
 }

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +18,7 @@ public class Profesor {
     private Long id;
     private String nombre;
     private String apellido;
-    @OneToMany
-    private ArrayList<Curso> cursos;
+
+    @OneToMany(mappedBy = "profesor")
+    private List<Curso> cursos;
 }

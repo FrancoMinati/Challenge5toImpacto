@@ -1,0 +1,72 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Challenge</title>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/jpg" sizes="32x32" th:href="@{imgs/PE_logo.png}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" type="text/css">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+</head>
+<body>
+<th:block th:replace="~{components/navbar :: navbar}"></th:block>
+<main class="container-fluid mt-5 d-flex align-items-center justify-content-center flex-column">
+    <div class="shadow-lg bg-primary p-5 text-light bg-primary bg-opacity-50">
+        <h1>Desafío Técnico Quinto Impacto</h1>
+    </div>
+    <div class="shadow-xl bg-light p-5 ">
+        <h2>Bienvenido a mi Desafío Técnico, mi nombre es Franco Minati</h2>
+        <p>
+            Antes de usarlo, algunas instrucciones:
+            plantee el código y la forma de uso en base a las consignas del desafío pero me tome la libertad de
+            establecer una procedimiento para la carga
+            de las entidades, que me resulto el que mayor sentido tiene, habían varias formas de realizarlo, pero me decidí por esta.
+        <ul>
+            <li class="d-flex gap-3"><strong>1ro:</strong> No se pueden cargar alumnos en el sistema, si no existen cursos en el mismo, al intentar
+                hacerlo se mostrara un mensaje haciendo
+                referencia a esto que describo. Me resulto coherente, debido a que no veo lógico,  registrar alumnos, si no
+                hay cursos para ofrecer.
+            </li>
+            <li class="d-flex gap-3"><strong>2do:</strong> No es posible cargar cursos, sin la existencia de profesores en el sistema, el pensamiento
+                es análogo, esto es facil de quitar  igualmente, no supone un problema, si no es lo que se pide en la consigna, pero fue parte de mi
+                razonamiento.
+            </li>
+            <li class="d-flex gap-3"><strong>3ro:</strong> El proceso comienza cargando un profesor como mínimo, una vez cargado este, es posible
+                cargar el primer curso o cursos, sin alumnos.
+            </li>
+            <li class="d-flex gap-3"><strong>4to:</strong>A partir de aquí es posible agregar alumnos, los cuales podran seleccionar a que cursos ir
+                por única vez, para posterior asignacion de
+                curso a los alumnos sera necesario reubicarlos desde el update del curso corresponiente en el ABM de
+                CURSOS
+            </li>
+            <li class="d-flex gap-3"><strong>5to:</strong> Como se pide en la consigna, no es posible modificar los cursos a los que un alumno va,
+                desde el update  de una instancia de alumno, sino que solo se podran modificar sus datos personales, nombre,
+                historia,fecha de nacimiento y edad
+            </li>
+            <li class="d-flex gap-3"><strong>6to:</strong>Es posible filtrar los alumnos por nombre y por curso, por separado, interprete así la
+                consigna.
+            </li>
+            <li class="d-flex gap-3"><strong>7mo:</strong>Se armo el endpoint para remover al profesor de un curso, abajo del profesor
+                asignado al curso, aparece un boton
+                que dice <strong>remover profesor</strong> al hacer click el profesor es removido del curso.
+            </li>
+            <li class="d-flex gap-3"><strong>8vo:</strong>En el curso, es posible editar, sus valores, se pueden asignar los alumnos y removerlos</li>
+            <li class="d-flex gap-3"><strong>9no:</strong>Para la baja de las entidades, esta configurado como HardDelete, asi que una vez le damos al
+                boton eliminar, se borran para siempre, no es softdelete
+            </li>
+            <li><strong>Aclaración:</strong>En este tipo de ejercicios tiene sentido agregar paginación, pero voy a enviar el desafío sin paginación para que puedan irlo viendo</li>
+
+        </ul>
+        </p>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
+        integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
+        crossorigin="anonymous"></script>
+</body>
+</html>

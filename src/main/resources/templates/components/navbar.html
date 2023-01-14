@@ -1,0 +1,27 @@
+<th:block th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg  bg-primary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand bg-white rounded-4 px-3 " href="/"><img th:src="@{/imgs/301721532_468893645248961_1191462660679554110_n.png}" alt=""
+                                                                            style="max-width: 60px;">Challenge</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav text-light">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-light"href="/inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-light" th:href="@{/cursos/abm}">ABM CURSOS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-light" th:href="@{/profesores/abm}">ABM PROFESORES</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-light" th:href="@{/alumnos/abm}">ABM ALUMNOS</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</th:block>
