@@ -11,9 +11,11 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 public class AlumnoService implements BaseService<Alumno> {
@@ -100,8 +102,16 @@ public class AlumnoService implements BaseService<Alumno> {
     @Transactional
     public List<Alumno> getAlumnosByCurso(String nombre) throws AlumnoException {
         try {
-            Curso curso = this.cursoRepository.findCursoByNombre(nombre);
-            return curso.getAlumnos();
+
+            return this.alumnoRepository.findAlumnoByCurso(nombre);
+        } catch (Exception ex) {
+            throw new AlumnoException(ex.getMessage());
+        }
+    }
+    @Transactional
+    public List<Alumno> getAlumnosByNombreAndCurso(String nombreAlumno,String nombreCurso) throws AlumnoException {
+        try {
+            return this.alumnoRepository.findAlumnosByNombreAnAndCursos(nombreCurso,nombreAlumno);
         } catch (Exception ex) {
             throw new AlumnoException(ex.getMessage());
         }
@@ -137,7 +147,6 @@ public class AlumnoService implements BaseService<Alumno> {
         }
 
     }
-    @Transactional
     public void validarInformacion(String nombre, String historia,Date fechaNacimiento) throws CursoException {
         if(Strings.isBlank(nombre)){
             throw new CursoException("El Nombre no puede estar vacío");
@@ -148,5 +157,19 @@ public class AlumnoService implements BaseService<Alumno> {
         if(fechaNacimiento==null){
             throw new CursoException("La Fecha de Nacimiento no puede estar vacía");
         }
+    }
+    public List<Alumno> filtrarListaPorNombreYCurso(String nombre, String curso) throws AlumnoException {
+        List<Alumno> filtrados=new ArrayList<>();
+        if(nombre!=null && curso!=null){
+            filtrados=getAlumnosByNombreAndCurso(nombre,curso);
+        }else{
+            if(nombre!=null){
+                filtrados=getByNombre(nombre);
+            }
+            if(curso!=null){
+                filtrados=getAlumnosByCurso(curso);
+            }
+        }
+        return filtrados;
     }
 }

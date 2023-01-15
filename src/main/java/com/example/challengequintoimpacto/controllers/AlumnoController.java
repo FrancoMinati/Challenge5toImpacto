@@ -50,15 +50,11 @@ public class AlumnoController {
             if(!cursoService.getAll().isEmpty()){
                 model.addAttribute(LISTA_DE_CURSOS,cursoService.getAll());
             }
-            if(nombre!=null){
-                List<Alumno> filtrados=alumnoService.getByNombre(nombre);
-                model.addAttribute(LISTA_DE_ALUMNOS,filtrados);
-            }
-            if(curso!=null){
-                List<Alumno>filtrados=alumnoService.getAlumnosByCurso(curso);
+            model.addAttribute(LISTA_DE_ALUMNOS,alumnoService.filtrarListaPorNombreYCurso(nombre,curso));
+            if(!curso.equals("")){
                 model.addAttribute("filtro",curso);
-                model.addAttribute(LISTA_DE_ALUMNOS,filtrados);
             }
+            model.addAttribute("filtroAlumno",nombre);
             return VIEW_ABM_ALUMNOS;
         }catch (Exception ex){
             model.addAttribute(VIEW_ERROR,ex.getMessage());
